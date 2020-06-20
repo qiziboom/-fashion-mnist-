@@ -125,7 +125,7 @@ accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
 sess.run(tf.global_variables_initializer())
 os.environ["TF_CPP_MIN_LOG_LEVEL"]="2"###"=0"为默认值，输出所有信息；"=1"屏蔽通知信息；"=2"屏蔽通知信息和warning；"=3"屏蔽通知、warning、和报错
-for i in range(1001):
+for i in range(3001):
     batch = fashion_MNIST.train.next_batch(10)
     if i%100 == 0:
         train_accuracy = accuracy.eval(feed_dict={
