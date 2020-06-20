@@ -62,13 +62,13 @@ def convolutional_block( X_input, kernel_size, in_filter, out_filters, stage, bl
         f1, f2, f3 = out_filters
         x_shortcut = X_input
         #first
-        W_conv1 = weight_variable([1, 1, in_filter, f1])
+        W_conv1 = weight_variable([1, 1, in_filter, f1])#仅改变神经元个数(输出维度)
         X = tf.nn.conv2d(X_input, W_conv1,strides=[1, stride, stride, 1],padding='SAME')
         b_conv1 = bias_variable([f1])
         X = tf.nn.relu(X + b_conv1)
         #second
         W_conv2 =weight_variable([kernel_size, kernel_size, f1, f2])
-        X = tf.nn.conv2d(X, W_conv2, strides=[1,1,1,1], padding='SAME')
+        X = tf.nn.conv2d(X, W_conv2, strides=[1,1,1,1], padding='SAME')#(实际卷积操作)
         b_conv2 = bias_variable([f2])
         X = tf.nn.relu(X+b_conv2)
         #third
@@ -115,8 +115,7 @@ y_conv = tf.matmul(h_fc1_drop, w_fc2) + b_fc2
 
 #建立损失函数，在这里采用交叉熵函数
 
-cross_entropy = tf.reduce_mean(
-    tf.nn.softmax_cross_entropy_with_logits(labels=y, logits=y_conv))
+cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y, logits=y_conv))
 train_step = tf.train.AdamOptimizer(1e-3).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
@@ -124,7 +123,7 @@ accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 #初始化变量
 
 sess.run(tf.global_variables_initializer())
-os.environ["TF_CPP_MIN_LOG_LEVEL"]="2"###"=0"为默认值，输出所有信息；"=1"屏蔽通知信息；"=2"屏蔽通知信息和warning；"=3"屏蔽通知、warning、和报错
+os.environ["TF_CPP_MIN_LOG_LEVEL"]="3"###"=0"为默认值，输出所有信息；"=1"屏蔽通知信息；"=2"屏蔽通知信息和warning；"=3"屏蔽通知、warning、和报错
 for i in range(3001):
     batch = fashion_MNIST.train.next_batch(10)
     if i%100 == 0:
