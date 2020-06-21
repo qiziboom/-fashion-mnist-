@@ -46,7 +46,7 @@ def identity_block(X_input, kernel_size, in_filter, out_filters, stage, block):
         X = tf.nn.conv2d(X, W_conv3, strides=[1, 1, 1, 1], padding='SAME')
         b_conv3 = bias_variable([f3])
         X = tf.nn.relu(X+ b_conv3)
-        #final step
+        #final
         add = tf.add(X, X_shortcut)#跳跃连接
         #b_conv_fin = bias_variable([f3])
         add_result = tf.nn.relu(add)
@@ -57,8 +57,8 @@ def identity_block(X_input, kernel_size, in_filter, out_filters, stage, block):
 def convolutional_block( X_input, kernel_size, in_filter, out_filters, stage, block, stride=2):
 
     # defining name basis
-    block_name = 'res' + str(stage) + block
-    with tf.variable_scope(block_name):
+     block_name = 'res' + str(stage) + block
+     with tf.variable_scope(block_name):
         f1, f2, f3 = out_filters
         x_shortcut = X_input
         #first
@@ -91,17 +91,17 @@ w_conv1 = weight_variable([2, 2, 1, 64])#参数：卷积核长、宽、输入通
 x1 = tf.nn.conv2d(x1, w_conv1, strides=[1, 2, 2, 1], padding='SAME')
 b_conv1 = bias_variable([64])
 x1 = tf.nn.relu(x1+b_conv1)
-# 这里操作后变成14x14x64
+#张量尺寸14x14x64
 x1 = tf.nn.max_pool(x1, ksize=[1, 3, 3, 1], strides=[1, 1, 1, 1], padding='SAME')
 
 # stage 2
 x2 = convolutional_block(X_input=x1, kernel_size=3, in_filter=64,  out_filters=[64, 64, 256], stage=2, block='a', stride=1)
-# conv_block后，尺寸14x14x256
+#卷积后尺寸14x14x256
 x2 = identity_block(x2, 3, 256, [64, 64, 256], stage=2, block='b' )
 x2 = identity_block(x2, 3, 256, [64, 64, 256], stage=2, block='c')
-# 张量尺寸14x14x256
+#尺寸14x14x256
 x2 = tf.nn.max_pool(x2, [1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
-# 7x7x256
+#7x7x256
 flat = tf.reshape(x2, [-1, 7*7*256])
 
 w_fc1 = weight_variable([7 * 7 *256, 1024])
@@ -123,7 +123,7 @@ accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 #初始化变量
 
 sess.run(tf.global_variables_initializer())
-os.environ["TF_CPP_MIN_LOG_LEVEL"]="3"###"=0"为默认值，输出所有信息；"=1"屏蔽通知信息；"=2"屏蔽通知信息和warning；"=3"屏蔽通知、warning、和报错
+os.environ["TF_CPP_MIN_LOG_LEVEL"]="3" #"=0"为默认值，输出所有信息；"=1"屏蔽通知信息；"=2"屏蔽通知和warning；"=3"屏蔽通知、warning、和报错
 for i in range(3001):
     batch = fashion_MNIST.train.next_batch(10)
     if i%100 == 0:
