@@ -1,5 +1,5 @@
 # -fashion-mnist-
-2020人工智能课程设计程序
+#基于深度残差网络的Fashion-MNIST数据分类--课程设计程序
 
 from tensorflow.examples.tutorials.mnist import input_data
 import tensorflow as tf
